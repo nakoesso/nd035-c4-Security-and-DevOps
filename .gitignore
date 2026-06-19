@@ -1,2 +1,18 @@
+# IDE
 .idea/
+*.iml
+.vscode/
+
+# Build
 /starter_code/target/
+
+# Logs
+/starter_code/logs/
+*.log
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Maven wrapper
+.mvn/wrapper/maven-wrapper.jar
