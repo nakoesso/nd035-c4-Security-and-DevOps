@@ -2,6 +2,7 @@ package com.example.demo.controllers;
 
 import java.util.Optional;
 
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -19,10 +20,11 @@ import com.example.demo.model.persistence.repositories.CartRepository;
 import com.example.demo.model.persistence.repositories.UserRepository;
 import com.example.demo.model.requests.CreateUserRequest;
 
+@Slf4j
 @RestController
 @RequestMapping("/api/user")
 public class UserController {
-	
+
 	@Autowired
 	private UserRepository userRepository;
 	
@@ -48,16 +50,22 @@ public class UserController {
 	public ResponseEntity<User> createUser(@RequestBody CreateUserRequest createUserRequest) {
 		User user = new User();
 		user.setUsername(createUserRequest.getUsername());
+		log.info("CreateUser request received for username: {}", createUserRequest.getUsername());
 		Cart cart = new Cart();
 
 		cartRepository.save(cart);
 		user.setCart(cart);
-		if(createUserRequest.getPassword().length()<7 ||
-				!createUserRequest.getPassword().equals(createUserRequest.getConfirmPassword())){
+		if(createUserRequest.getPassword().length()<7){
+			log.error("CreateUser failure: password too short for user {}", createUserRequest.getUsername());
+			return ResponseEntity.badRequest().build();
+		}
+		if(!createUserRequest.getPassword().equals(createUserRequest.getConfirmPassword())){
+			log.error("CreateUser failure: password mismatch for user {}", createUserRequest.getUsername());
 			return ResponseEntity.badRequest().build();
 		}
 		user.setPassword(bCryptPasswordEncoder.encode(createUserRequest.getPassword()));
 		userRepository.save(user);
+		log.info("CreateUser success: user {} created", createUserRequest.getUsername());
 		return ResponseEntity.ok(user);
 	}
 	
