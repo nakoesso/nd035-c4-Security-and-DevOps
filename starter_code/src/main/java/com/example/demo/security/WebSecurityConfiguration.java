@@ -20,15 +20,12 @@ import org.springframework.security.web.SecurityFilterChain;
 public class WebSecurityConfiguration {
 
     private final UserDetailsServiceImpl userDetailsService;
-    private final BCryptPasswordEncoder bCryptPasswordEncoder;
 
     @Autowired
     private AuthenticationConfiguration authenticationConfiguration;
 
-    public WebSecurityConfiguration(UserDetailsServiceImpl userDetailsService,
-                                    BCryptPasswordEncoder bCryptPasswordEncoder) {
+    public WebSecurityConfiguration(UserDetailsServiceImpl userDetailsService) {
         this.userDetailsService = userDetailsService;
-        this.bCryptPasswordEncoder = bCryptPasswordEncoder;
     }
 
     @Bean
@@ -61,7 +58,7 @@ public class WebSecurityConfiguration {
     public DaoAuthenticationProvider daoAuthenticationProvider() {
         DaoAuthenticationProvider provider = new DaoAuthenticationProvider();
         provider.setUserDetailsService(userDetailsService);
-        provider.setPasswordEncoder(bCryptPasswordEncoder);
+        provider.setPasswordEncoder(bCryptPasswordEncoder());
         return provider;
     }
 
