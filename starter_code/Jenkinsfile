@@ -6,7 +6,7 @@ pipeline {
     }
 
     environment {
-        DOCKER_HUB_USER = 'Admin2016@%NONO%' // remplacez par votre username Docker Hub
+        DOCKER_HUB_USER = 'noellie' // remplacez par votre username Docker Hub
         DOCKER_IMAGE = "${DOCKER_HUB_USER}/auth-course"
         DOCKER_TAG = "${BUILD_NUMBER}"
     }
